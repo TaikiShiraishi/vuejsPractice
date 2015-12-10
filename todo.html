@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Todo</title>
+  <script src="./vue.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>My Todos</h1>
+    <div v-for="t in todos">
+      <input type="checkbox" v-model="t.isDone">
+      <label>{{$index}}:{{t.content}}</label>
+      <input type="button" v-on:click="removeTodo($index)" value="x">
+    </div>
+    <input type="text" v-model="input" value="">
+    <input type="button" v-on:click="addTodo()" value="add todo">
+    <div>
+      {{lefts}} tasks.
+    </div>
+  </div>
+    
+  <script>
+    var app = new Vue({
+      // elementを取得
+      el: '#app',
+      // データを初期化
+      data: {
+        todos: [],
+        input: ""
+      },
+      // 自動的に計算
+      computed: {
+        lefts: function(){
+          return this.todos.filter(function(t){
+            return !t.isDone
+          }).length;
+        }
+      },
+      // 読み込んだ最初に呼ばれる関数
+      created: function(){
+        this.title = "My Todos";
+        console.log('created');
+        var saved = [
+        {
+          isDone: true,
+          content: "content1"
+        },
+        {
+          isDone: false,
+          content: "content2"
+        },
+        {
+          isDone: false,
+          content: "content3"
+        },
+        {
+          isDone: false,
+          content: "content4"
+        }
+        ]
+        for(var i = 0; i < saved.length; i++){
+          this.todos.push(saved[i]);
+        }
+        console.dir(this.todos);
+      },
+      // 変数の宣言
+      methods: {
+        addTodo: function(){
+          console.log('add todo');
+          if(this.input === '') return;
+          this.todos.push({isDone:false, content:this.input});
+          this.input =""
+        },
+        removeTodo: function(index){
+          console.log('remove todo');
+          this.todos.splice(index, 1);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
